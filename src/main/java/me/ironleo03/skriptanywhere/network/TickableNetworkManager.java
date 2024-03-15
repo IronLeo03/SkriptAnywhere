@@ -47,6 +47,12 @@ public class TickableNetworkManager {
             if (key.isReadable()) {
                 System.out.println("Reading connection");
             }
+            /*
+             * SocketChannel connected
+             */
+            if (key.isConnectable()) {
+                System.out.println("Connected");
+            }
         }
     }
 }
