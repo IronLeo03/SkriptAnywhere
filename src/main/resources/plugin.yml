@@ -1,0 +1,7 @@
+name: Skriptanywhere
+version: '${project.version}'
+main: me.ironleo03.skriptanywhere.SkriptAnywhere
+api-version: 1.19
+depend: [ Skript ]
+authors: [ IronLeo03 ]
+description: Use skript where it was not (and still is not) supposed to be!
