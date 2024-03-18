@@ -11,12 +11,14 @@ import java.util.Iterator;
 public class TickableNetworkManager {
     @Getter
     private final Selector selector;
+
     public TickableNetworkManager() throws IOException {
         selector = Selector.open();
     }
 
     /**
      * Delegate ticking to the server that creates an instance of TickableNetworkManager.
+     *
      * @throws IOException
      */
     public void tick() throws IOException {
@@ -54,7 +56,14 @@ public class TickableNetworkManager {
              */
             if (key.isConnectable()) {
                 AnywhereSocket anywhereSocket = (AnywhereSocket) key.attachment();
-                anywhereSocket.callbackConnect(key);
+                try {
+                    anywhereSocket.callbackConnect(key);
+                    //todo fire event
+                } catch (IOException exception) {
+                    key.cancel();
+                    anywhereSocket.getSocketChannel().close();
+                    //todo fire event
+                }
             }
         }
     }

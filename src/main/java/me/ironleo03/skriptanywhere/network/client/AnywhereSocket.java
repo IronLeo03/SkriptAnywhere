@@ -46,30 +46,20 @@ public class AnywhereSocket {
 
     /**
      * Callback for OP_CONNECT interest.
-     * Finish connecting socket.
-     * Cancel selection key if fails.
+     * Finish connecting socket and change interests on selector.
      *
+     * @throws IOException if connection fails
      * @param selectionKey key of selector throwing the callback
-     * @return True
+     * @return False is the client was already connected, true otherwise
      */
-    public boolean callbackConnect(SelectionKey selectionKey) {
-        try {
-            if (!socketChannel.finishConnect())
-                throw new Exception("connection failed");
-
-            selectionKey.interestOps(SelectionKey.OP_READ);
-            //todo fire event
-            return true;
-        } catch (Exception e) {
-            //todo handle
-            selectionKey.cancel();
-            try {
-                socketChannel.close();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+    public boolean callbackConnect(SelectionKey selectionKey) throws IOException {
+        if (socketChannel.isConnected())
             return false;
-        }
+
+        if (!socketChannel.finishConnect())
+            throw new IOException("connection failed");
+        selectionKey.interestOps(SelectionKey.OP_READ);
+        return true;
     }
 
     /**
