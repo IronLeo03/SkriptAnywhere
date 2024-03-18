@@ -46,7 +46,8 @@ public class TickableNetworkManager {
              * Channel is available for reading
              */
             if (key.isReadable()) {
-                System.out.println("Reading connection");
+                AnywhereSocket anywhereSocket = (AnywhereSocket) key.attachment();
+                anywhereSocket.callbackRead(key);
             }
             /*
              * SocketChannel connected

@@ -71,4 +71,17 @@ public class AnywhereSocket {
             return false;
         }
     }
+
+    /**
+     * Read from client
+     *
+     * @param selectionKey key within the selector throwing the callback
+     * @return Client's input
+     * @throws IOException
+     */
+    public ByteBuffer callbackRead(SelectionKey selectionKey) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        socketChannel.read(buffer);
+        return buffer;
+    }
 }
