@@ -1,6 +1,7 @@
 package me.ironleo03.skriptanywhere.network;
 
 import lombok.Getter;
+import me.ironleo03.skriptanywhere.network.client.AnywhereSocket;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -51,7 +52,8 @@ public class TickableNetworkManager {
              * SocketChannel connected
              */
             if (key.isConnectable()) {
-                System.out.println("Connected");
+                AnywhereSocket anywhereSocket = (AnywhereSocket) key.attachment();
+                anywhereSocket.callbackConnect(key);
             }
         }
     }

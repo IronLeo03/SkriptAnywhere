@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -28,6 +29,7 @@ public class AnywhereSocket {
      * Register new instance of SocketChannel to selector.
      * Expect tickable manager to use my callbacks on IO events
      * If instance of SocketChannel already exists, do nothing and return false
+     *
      * @param selector Register SocketChannel to this selector
      * @return True if a new instance of SocketChannel was created
      * @throws IOException On SocketChannel's exceptions.
@@ -40,5 +42,29 @@ public class AnywhereSocket {
         socketChannel.register(selector, SelectionKey.OP_CONNECT).attach(this);
         socketChannel.connect(address);
         return true;
+    }
+
+    /**
+     * Callback for OP_CONNECT interest.
+     * Finish connecting socket.
+     * Cancel selection key if fails.
+     * @param selectionKey key of selector throwing the callback
+     * @return True
+     */
+    public boolean callbackConnect(SelectionKey selectionKey) {
+        try {
+            /**
+             * finishConnect should throw an exception if the socket failed to connect.
+             * This assert should then always be true if no exception is thrown by NIO.
+             */
+            assert (socketChannel.finishConnect());
+            selectionKey.interestOps(SelectionKey.OP_READ);
+            //todo fire event
+            return true;
+        } catch (Exception e) {
+            //todo handle
+            selectionKey.cancel();
+            return false;
+        }
     }
 }
