@@ -64,6 +64,11 @@ public class AnywhereSocket {
         } catch (Exception e) {
             //todo handle
             selectionKey.cancel();
+            try {
+                socketChannel.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             return false;
         }
     }
