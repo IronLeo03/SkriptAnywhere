@@ -49,4 +49,10 @@ public class AnywhereServerSocket {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT).attach(this);
         return true;
     }
+
+    public AnywhereSocket acceptRegister(SelectionKey selectionKey) throws IOException {
+        SocketChannel client = serverSocketChannel.accept();
+        client.configureBlocking(false);
+        return new AnywhereSocket(client,selectionKey.selector());
+    }
 }

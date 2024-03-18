@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -22,6 +23,19 @@ public class AnywhereSocket {
 
     public AnywhereSocket(InetSocketAddress address) {
         this.address = address;
+    }
+
+    /**
+     * Create AnywhereSocket with an existing socket channel.
+     * Register socketchannel to selector.
+     * @param socketChannel SocketChannel to register. Must already be in non-blocking mode.
+     * @param selector Register SocketChannel to this selector.
+     * @throws ClosedChannelException On Selector exception.
+     */
+    public AnywhereSocket(SocketChannel socketChannel, Selector selector) throws ClosedChannelException {
+        this.socketChannel = socketChannel;
+        this.address = (InetSocketAddress) socketChannel.socket().getRemoteSocketAddress();
+        socketChannel.register(selector, SelectionKey.OP_READ).attach(this);
     }
 
     /**

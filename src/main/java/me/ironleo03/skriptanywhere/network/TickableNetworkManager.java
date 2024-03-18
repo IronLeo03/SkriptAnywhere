@@ -2,6 +2,7 @@ package me.ironleo03.skriptanywhere.network;
 
 import lombok.Getter;
 import me.ironleo03.skriptanywhere.network.client.AnywhereSocket;
+import me.ironleo03.skriptanywhere.network.server.AnywhereServerSocket;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -36,7 +37,13 @@ public class TickableNetworkManager {
              * Sever can accept a connection
              */
             if (key.isAcceptable()) {
-                System.out.println("Accepting connection");
+                AnywhereServerSocket anywhereServerSocket = (AnywhereServerSocket) key.attachment();
+                try {
+                    anywhereServerSocket.acceptRegister(key);
+                    //todo fire event
+                } catch (IOException e) {
+                    //todo fire event
+                }
             }
             /*
              * Channel is available for writing
