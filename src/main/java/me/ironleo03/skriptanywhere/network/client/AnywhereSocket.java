@@ -48,16 +48,15 @@ public class AnywhereSocket {
      * Callback for OP_CONNECT interest.
      * Finish connecting socket.
      * Cancel selection key if fails.
+     *
      * @param selectionKey key of selector throwing the callback
      * @return True
      */
     public boolean callbackConnect(SelectionKey selectionKey) {
         try {
-            /**
-             * finishConnect should throw an exception if the socket failed to connect.
-             * This assert should then always be true if no exception is thrown by NIO.
-             */
-            assert (socketChannel.finishConnect());
+            if (!socketChannel.finishConnect())
+                throw new Exception("connection failed");
+
             selectionKey.interestOps(SelectionKey.OP_READ);
             //todo fire event
             return true;
