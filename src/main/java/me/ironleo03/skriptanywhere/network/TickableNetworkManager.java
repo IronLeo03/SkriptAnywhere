@@ -49,7 +49,13 @@ public class TickableNetworkManager {
              */
             if (key.isReadable()) {
                 AnywhereSocket anywhereSocket = (AnywhereSocket) key.attachment();
-                anywhereSocket.callbackRead(key);
+                try {
+                    anywhereSocket.callbackRead(key);
+                    //todo fire event
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //todo fire event
+                }
             }
             /*
              * SocketChannel connected
