@@ -78,14 +78,15 @@ public class AnywhereSocket {
 
     /**
      * Read from client
+     * Detect client disconnecting (https://stackoverflow.com/questions/12243765/java-handling-socket-disconnection/12244232#12244232)
      *
      * @param selectionKey key within the selector throwing the callback
-     * @return Client's input
+     * @return Client's input or null if the client has disconnected
      * @throws IOException
      */
     public ByteBuffer callbackRead(SelectionKey selectionKey) throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
-        socketChannel.read(buffer);
-        return buffer;
+        int received = socketChannel.read(buffer);
+        return received!=-1 ? buffer : null;
     }
 }

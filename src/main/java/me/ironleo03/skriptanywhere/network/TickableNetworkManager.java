@@ -5,6 +5,7 @@ import me.ironleo03.skriptanywhere.network.client.AnywhereSocket;
 import me.ironleo03.skriptanywhere.network.server.AnywhereServerSocket;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
@@ -55,10 +56,19 @@ public class TickableNetworkManager {
              * Channel is available for reading
              */
             if (key.isReadable()) {
+                //todo keep-alive
                 AnywhereSocket anywhereSocket = (AnywhereSocket) key.attachment();
                 try {
-                    anywhereSocket.callbackRead(key);
-                    //todo fire event
+                    ByteBuffer byteBuffer = anywhereSocket.callbackRead(key);
+                    if (byteBuffer == null) {
+                        //todo fire event
+                        //todo make a method for disconnection
+                        key.cancel();
+                        anywhereSocket.getSocketChannel().close();
+                        continue;
+                    } else {
+                        //todo fire event
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                     //todo fire event
@@ -73,6 +83,7 @@ public class TickableNetworkManager {
                     anywhereSocket.callbackConnect(key);
                     //todo fire event
                 } catch (IOException exception) {
+                    //todo make a method for disconnection
                     key.cancel();
                     anywhereSocket.getSocketChannel().close();
                     //todo fire event
