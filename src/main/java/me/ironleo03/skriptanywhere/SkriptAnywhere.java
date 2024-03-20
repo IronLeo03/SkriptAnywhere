@@ -5,6 +5,7 @@ import ch.njol.skript.SkriptAddon;
 import lombok.Getter;
 import me.ironleo03.skriptanywhere.elements.ClassInfos;
 import me.ironleo03.skriptanywhere.network.TickableNetworkManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -44,5 +45,17 @@ public class SkriptAnywhere extends JavaPlugin {
             throw new RuntimeException(e);
         }
         getLogger().info("SkriptAnywhere has finished starting");
+
+        //TODO
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    tickableNetworkManager.tick();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        },5,5);
     }
 }
