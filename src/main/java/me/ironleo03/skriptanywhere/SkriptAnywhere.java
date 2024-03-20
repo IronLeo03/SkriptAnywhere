@@ -16,6 +16,7 @@ public class SkriptAnywhere extends JavaPlugin {
      */
     @Getter
     private static SkriptAnywhere instance;
+    @Getter
     private TickableNetworkManager tickableNetworkManager;
     private SkriptAddon skriptAddon;
 
