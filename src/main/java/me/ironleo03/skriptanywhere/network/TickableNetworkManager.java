@@ -9,13 +9,36 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class TickableNetworkManager {
     @Getter
     private final Selector selector;
+    /**
+     * Fire when AnywhereSocket receives a connection
+     */
+    @Getter
+    private BiConsumer<AnywhereServerSocket, AnywhereSocket> fireServerAcceptsConnectionEvent;
+    @Getter
+    private BiConsumer<AnywhereSocket, ByteBuffer> fireClientReceivesDataEvent;
+    private Consumer<AnywhereSocket> fireClientConnectsEvent;
 
-    public TickableNetworkManager() throws IOException {
+    /**
+     * Tickable Network Manager tries to be platform independent.
+     * Implementations of how to properly fire events is needed.
+     * Events are only fired if the instances are registered to {@link #getSelector()}.
+     *
+     * @param fireServerAcceptsConnectionEvent Called when {@link AnywhereServerSocket#acceptRegister(SelectionKey)} is called (a new client has connected)
+     * @param fireClientReceivesDataEvent Called when {@link AnywhereSocket#callbackRead(SelectionKey)} is called (client has received data contained in a byte buffer)
+     * @param fireClientConnectsEvent Called when {@link AnywhereSocket#callbackConnect(SelectionKey)} is called (client finishes connecting)
+     * @throws IOException
+     */
+    public TickableNetworkManager(BiConsumer<AnywhereServerSocket, AnywhereSocket> fireServerAcceptsConnectionEvent, BiConsumer<AnywhereSocket, ByteBuffer> fireClientReceivesDataEvent, Consumer<AnywhereSocket> fireClientConnectsEvent) throws IOException {
         selector = Selector.open();
+        this.fireServerAcceptsConnectionEvent = fireServerAcceptsConnectionEvent;
+        this.fireClientReceivesDataEvent = fireClientReceivesDataEvent;
+        this.fireClientConnectsEvent = fireClientConnectsEvent;
     }
 
     /**
@@ -40,8 +63,8 @@ public class TickableNetworkManager {
             if (key.isAcceptable()) {
                 AnywhereServerSocket anywhereServerSocket = (AnywhereServerSocket) key.attachment();
                 try {
-                    anywhereServerSocket.acceptRegister(key);
-                    //todo fire event
+                    AnywhereSocket anywhereSocket = anywhereServerSocket.acceptRegister(key);
+                    fireServerAcceptsConnectionEvent.accept(anywhereServerSocket,anywhereSocket);
                 } catch (IOException e) {
                     //todo fire event
                 }
@@ -67,7 +90,7 @@ public class TickableNetworkManager {
                         anywhereSocket.getSocketChannel().close();
                         continue;
                     } else {
-                        //todo fire event
+                        fireClientReceivesDataEvent.accept(anywhereSocket,byteBuffer);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -81,7 +104,7 @@ public class TickableNetworkManager {
                 AnywhereSocket anywhereSocket = (AnywhereSocket) key.attachment();
                 try {
                     anywhereSocket.callbackConnect(key);
-                    //todo fire event
+                    fireClientConnectsEvent.accept(anywhereSocket);
                 } catch (IOException exception) {
                     //todo make a method for disconnection
                     key.cancel();

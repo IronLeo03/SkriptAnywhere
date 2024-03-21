@@ -32,7 +32,11 @@ public class SkriptAnywhere extends JavaPlugin {
         instance = this;
         getLogger().info("Now starting TickableNetworkManager");
         try {
-            tickableNetworkManager = new TickableNetworkManager();
+            tickableNetworkManager = new TickableNetworkManager(
+                    null,
+                    null,
+                    null
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
