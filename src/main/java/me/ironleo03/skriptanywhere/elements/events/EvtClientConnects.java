@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
  */
 public class EvtClientConnects extends SkriptEvent {
     static {
-        Skript.registerEvent("ClientConnects", EvtClientConnects.class, AnywhereClientConnectsEvent.class, "client connects");
+        Skript.registerEvent("ClientConnects", EvtClientConnects.class, AnywhereClientConnectsEvent.class, "(client|socket) connect[s]");
         EventValues.registerEventValue(AnywhereClientConnectsEvent.class, AnywhereSocket.class, new Getter<AnywhereSocket, AnywhereClientConnectsEvent>() {
             @Override
             public AnywhereSocket get(AnywhereClientConnectsEvent arg) {
