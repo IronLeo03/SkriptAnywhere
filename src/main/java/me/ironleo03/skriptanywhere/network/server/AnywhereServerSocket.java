@@ -46,6 +46,7 @@ public class AnywhereServerSocket {
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.bind(address);
+        //todo store this instead of asking it as an argument
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT).attach(this);
         return true;
     }
@@ -54,5 +55,24 @@ public class AnywhereServerSocket {
         SocketChannel client = serverSocketChannel.accept();
         client.configureBlocking(false);
         return new AnywhereSocket(client,selectionKey.selector());
+    }
+
+    /**
+     * Attempts to close server socket
+     * If selectionKey is not null, attempt to cancel selection key
+     * If another selection key is passed, throw runtime exception
+     *
+     * @param selectionKey Server's selection key
+     * @throws IOException
+     */
+    public void stop(SelectionKey selectionKey) throws IOException {
+        serverSocketChannel.close();
+        if (selectionKey != null) {
+            if (selectionKey.attachment() == this) {
+                selectionKey.cancel();
+            } else {
+                throw new RuntimeException("Wrong selection key passed");
+            }
+        }
     }
 }
