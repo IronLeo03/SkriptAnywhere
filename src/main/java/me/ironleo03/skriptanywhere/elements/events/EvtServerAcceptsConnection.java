@@ -7,11 +7,16 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import me.ironleo03.skriptanywhere.events.AnywhereClientConnectsEvent;
 import me.ironleo03.skriptanywhere.events.AnywhereServerAcceptsConnectionEvent;
 import me.ironleo03.skriptanywhere.network.client.AnywhereSocket;
 import me.ironleo03.skriptanywhere.network.server.AnywhereServerSocket;
 import org.bukkit.event.Event;
 
+/**
+ * Relays {@link AnywhereServerAcceptsConnectionEvent} to Skript.
+ * Thank you Skript API.
+ */
 public class EvtServerAcceptsConnection extends SkriptEvent {
     static {
         Skript.registerEvent("ServerAcceptsClient", EvtServerAcceptsConnection.class, AnywhereServerAcceptsConnectionEvent.class, "(new connection|receive connection) [(on|at|to) [port] %-integer%]");

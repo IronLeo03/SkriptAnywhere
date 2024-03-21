@@ -10,6 +10,10 @@ import me.ironleo03.skriptanywhere.events.AnywhereClientConnectsEvent;
 import me.ironleo03.skriptanywhere.network.client.AnywhereSocket;
 import org.bukkit.event.Event;
 
+/**
+ * Relays {@link AnywhereClientConnectsEvent} to Skript.
+ * Thank you Skript API.
+ */
 public class EvtClientConnects extends SkriptEvent {
     static {
         Skript.registerEvent("ClientConnects", EvtClientConnects.class, AnywhereClientConnectsEvent.class, "client connects");

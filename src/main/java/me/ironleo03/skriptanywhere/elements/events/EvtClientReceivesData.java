@@ -7,10 +7,15 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import me.ironleo03.skriptanywhere.events.AnywhereClientConnectsEvent;
 import me.ironleo03.skriptanywhere.events.AnywhereClientReceivesDataEvent;
 import me.ironleo03.skriptanywhere.network.client.AnywhereSocket;
 import org.bukkit.event.Event;
 
+/**
+ * Relays {@link AnywhereClientReceivesDataEvent} to Skript.
+ * Thank you Skript API.
+ */
 public class EvtClientReceivesData extends SkriptEvent {
     static {
         Skript.registerEvent("ClientReceivesData", EvtClientReceivesData.class, AnywhereClientReceivesDataEvent.class, "client receive[s]");
