@@ -20,7 +20,7 @@ public class ExprCreateServerInstance extends SimpleExpression<AnywhereServerSoc
                 ExprCreateServerInstance.class,
                 AnywhereServerSocket.class,
                 ExpressionType.COMBINED,
-                "[a] [new] server listening on port %integer%");
+                "[a] [new] server [socket] listening on port %integer%");
     }
 
     private Expression<Number> port;
