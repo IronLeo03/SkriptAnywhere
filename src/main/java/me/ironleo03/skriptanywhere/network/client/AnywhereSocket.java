@@ -89,4 +89,8 @@ public class AnywhereSocket {
         int received = socketChannel.read(buffer);
         return received!=-1 ? buffer : null;
     }
+
+    public int write(String string) throws IOException {
+        return socketChannel.write(ByteBuffer.wrap(string.getBytes()));
+    }
 }
