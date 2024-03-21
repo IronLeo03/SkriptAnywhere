@@ -4,6 +4,9 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import lombok.Getter;
 import me.ironleo03.skriptanywhere.elements.ClassInfos;
+import me.ironleo03.skriptanywhere.events.AnywhereClientConnectsEvent;
+import me.ironleo03.skriptanywhere.events.AnywhereClientReceivesDataEvent;
+import me.ironleo03.skriptanywhere.events.AnywhereServerAcceptsConnectionEvent;
 import me.ironleo03.skriptanywhere.network.TickableNetworkManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,9 +36,9 @@ public class SkriptAnywhere extends JavaPlugin {
         getLogger().info("Now starting TickableNetworkManager");
         try {
             tickableNetworkManager = new TickableNetworkManager(
-                    null,
-                    null,
-                    null
+                    (j,k)-> Bukkit.getPluginManager().callEvent(new AnywhereServerAcceptsConnectionEvent(j,k)),
+                    (j,k)-> Bukkit.getPluginManager().callEvent(new AnywhereClientReceivesDataEvent(j,k)),
+                    (j)-> Bukkit.getPluginManager().callEvent(new AnywhereClientConnectsEvent(j))
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
