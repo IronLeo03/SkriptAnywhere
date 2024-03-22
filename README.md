@@ -121,6 +121,29 @@ on client receive:
 >
 > Return Type: `AnywhereSocket`
 
+#### Create client (expression)
+
+> **Definition**
+>
+> Pattern: `[a] [new] client [connected] [to] %string% [on] [port] %integer%`
+>
+> Return Type: `AnywhereSocket`
+
+Remember that creating a socket does not automatically connect it it.
+
+#### Client Connects (event)
+
+> **Definition**
+>
+> Pattern: `(new connection|receive connection) [(on|at|to) [port] %-integer%]`
+
+#### Connect Client (effect)
+> **Definition**
+>
+> Pattern: `[make] %anywheresocket% connect[s]`
+
+
+
 ## Example code
 
 ### HTTP server
