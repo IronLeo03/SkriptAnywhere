@@ -10,7 +10,7 @@ public class ExprIsClientActive extends SimplePropertyExpression<AnywhereSocket,
 
     @Override
     protected String getPropertyName() {
-        return "message";
+        return "active";
     }
 
     @Override
